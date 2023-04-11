@@ -68,12 +68,13 @@ class _MyFormState extends State<MyForm> {
       'password': _passwordController.text.trim(),
       'pdfUrl': pdfUrl,
       'createdAt': FieldValue.serverTimestamp(),
+      'gender': _gender,
     };
     await FirebaseFirestore.instance.collection('contracts').add(formData);
     _formKey.currentState!.reset();
     setState(() => _pdfFile = null);
   }
-
+  String? _gender;
   bool _obscureText = true;
   @override
   Widget build(BuildContext context) {
@@ -125,6 +126,21 @@ class _MyFormState extends State<MyForm> {
                   validator: (value) => value!.trim().isEmpty
                       ? 'Por favor, insira sua senha'
                       : null,
+                ),
+                DropdownButtonFormField<String>(
+                  decoration: InputDecoration(labelText: 'Gênero'),
+                  value: _gender,
+                  onChanged: (value) {
+                    setState(() {
+                      _gender = value;
+                    });
+                  },
+                  items: ['Masculino', 'Feminino']
+                      .map((e) => DropdownMenuItem<String>(
+                            value: e,
+                            child: Text(e),
+                          ))
+                      .toList(),
                 ),
                 SizedBox(height: 16.0),
                 _pdfFile != null
